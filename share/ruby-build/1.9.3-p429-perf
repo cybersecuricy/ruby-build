@@ -1,0 +1,33 @@
+build_package_combined_patch() {
+  local package_name="$1"
+
+  {
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/01-fix-make-clean.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/02-railsbench-gc.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/03-display-more-detailed-stack-trace.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/04-fork-support-for-gc-logging.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/05-track-live-dataset-size.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/06-webrick_204_304_keep_alive_fix.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/07-export-a-few-more-symbols-for-ruby-prof.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/08-thread-variables.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/09-faster-loading.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/10-falcon-st-opt.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/11-falcon-sparse-array.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/12-falcon-array-queue.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/13-railsbench-gc-fixes.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/head/railsexpress/14-show-full-backtrace-on-stack-overflow.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/e09cc64c691bc51846b13a748c1843c9d63a810d/patches/ruby/1.9.3/p392/railsexpress/15-configurable-fiber-stack-sizes.patch" | patch -p1
+
+    autoconf
+    sed -i '~' "s/HAVE_RL_PROMPT_/RL_PROMPT_/g" ext/readline/readline.c
+    # CFLAGS="-DGC_PROFILE_MORE_DETAIL -DCALC_EXACT_MALLOC_SIZE" ./configure --prefix="$PREFIX_PATH" $CONFIGURE_OPTS
+    CFLAGS="-DGC_PROFILE_MORE_DETAIL" ./configure --prefix="$PREFIX_PATH" $CONFIGURE_OPTS
+    ./configure --prefix="$PREFIX_PATH" $CONFIGURE_OPTS
+    make -j 2
+    make install
+  } >&4 2>&1
+}
+
+require_gcc
+install_package "yaml-0.1.4" "http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz#36c852831d02cf90508c29852361d01b"
+install_package "ruby-1.9.3-p429" "http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p429.tar.gz#993c72f7f805a9eb453f90b0b7fe0d2b" combined_patch
