@@ -1,0 +1,20 @@
+build_package_combined_patch() {
+  local package_name="$1"
+
+  {
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/01-zero-broken-tests.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/02-improve-gc-stats.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/03-display-more-detailed-stack-trace.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/04-show-full-backtrace-on-stack-overflow.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/05-fix-missing-c-return-event.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/06-backport-006e66b6680f60adfb434ee7397f0dbc77de7873.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/07-funny-falcon-stc-density.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/08-funny-falcon-stc-pool-allocation.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/09-aman-opt-aset-aref-str.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/254b63a537664059b6aac6e05aaf0f93b5018d3d/patches/ruby/2.1/head/railsexpress/10-funny-falcon-method-cache.patch" | patch -p1
+  } >&4 2>&1
+}
+
+install_package "yaml-0.1.6" "http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz#7da6971b4bd08a986dd2a61353bc422362bd0edcc67d7ebaac68c95f74182749" --if needs_yaml
+install_package "openssl-1.0.1h" "https://www.openssl.org/source/openssl-1.0.1h.tar.gz#9d1c8a9836aa63e2c6adb684186cbd4371c9e9dcc01d6e3bb447abf2d4d3d093" mac_openssl --if has_broken_mac_openssl
+install_package "ruby-2.1.1" "http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.1.tar.gz#c843df31ae88ed49f5393142b02b9a9f5a6557453805fd489a76fbafeae88941" ldflags_dirs combined_patch standard verify_openssl
