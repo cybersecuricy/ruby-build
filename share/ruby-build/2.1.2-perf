@@ -1,0 +1,19 @@
+build_package_combined_patch() {
+  local package_name="$1"
+
+  {
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/01-zero-broken-tests.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/02-improve-gc-stats.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/03-display-more-detailed-stack-trace.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/04-show-full-backtrace-on-stack-overflow.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/05-fix-missing-c-return-event.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/06-backport-006e66b6680f60adfb434ee7397f0dbc77de7873.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/07-funny-falcon-stc-density.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/08-funny-falcon-stc-pool-allocation.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/09-aman-opt-aset-aref-str.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/494684095ce008022aa1c5e65a7bdf5b99c736a0/patches/ruby/2.1/head/railsexpress/10-funny-falcon-method-cache.patch" | patch -p1
+  } >&4 2>&1
+}
+
+install_package "openssl-1.0.1h" "https://www.openssl.org/source/openssl-1.0.1h.tar.gz#9d1c8a9836aa63e2c6adb684186cbd4371c9e9dcc01d6e3bb447abf2d4d3d093" mac_openssl --if has_broken_mac_openssl
+install_package "ruby-2.1.2" "http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz#f22a6447811a81f3c808d1c2a5ce3b5f5f0955c68c9a749182feb425589e6635" ldflags_dirs combined_patch standard verify_openssl
