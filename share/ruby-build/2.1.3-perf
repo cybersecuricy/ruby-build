@@ -1,0 +1,18 @@
+
+build_package_combined_patch() {
+  local package_name="$1"
+
+  {
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/01-zero-broken-tests.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/02-improve-gc-stats.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/03-display-more-detailed-stack-trace.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/04-show-full-backtrace-on-stack-overflow.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/05-funny-falcon-stc-density.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/06-funny-falcon-stc-pool-allocation.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/07-aman-opt-aset-aref-str.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/fb6b427f71e756900184d1b6eaeb10245ec8405a/patches/ruby/2.1/head/railsexpress/08-funny-falcon-method-cache.patch" | patch -p1
+  } >&4 2>&1
+}
+
+install_package "openssl-1.0.1h" "https://www.openssl.org/source/openssl-1.0.1h.tar.gz#9d1c8a9836aa63e2c6adb684186cbd4371c9e9dcc01d6e3bb447abf2d4d3d093" mac_openssl --if has_broken_mac_openssl
+install_package "ruby-2.1.3" "http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.3.tar.gz#0818beb7b10ce9a058cd21d85cfe1dcd233e98b7342d32e9a5d4bebe98347f01" ldflags_dirs combined_patch standard verify_openssl
