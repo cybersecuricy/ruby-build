@@ -1,0 +1,20 @@
+
+build_package_combined_patch() {
+  local package_name="$1"
+  local patch_path=`dirname "${BASH_SOURCE[0]}"`/patches/`basename "${BASH_SOURCE[0]}"`
+
+  {
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/01-zero-broken-tests.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/02-improve-gc-stats.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/03-display-more-detailed-stack-trace.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/04-show-full-backtrace-on-stack-overflow.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/05-funny-falcon-stc-density.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/06-funny-falcon-stc-pool-allocation.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/07-aman-opt-aset-aref-str.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/08-funny-falcon-method-cache.patch" | patch -p1
+    curl "https://raw.githubusercontent.com/skaes/rvm-patchsets/master/patches/ruby/2.1.8/railsexpress/09-heap-dump-support.patch" | patch -p1
+  } >&4 2>&1
+}
+
+install_package "openssl-1.0.1q" "https://www.openssl.org/source/openssl-1.0.1q.tar.gz#b3658b84e9ea606a5ded3c972a5517cd785282e7ea86b20c78aa4b773a047fb7" mac_openssl --if has_broken_mac_openssl
+install_package "ruby-2.1.8" "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.8.tar.gz#afd832b8d5ecb2e3e1477ec6a9408fdf9898ee73e4c5df17a2b2cb36bd1c355d" ldflags_dirs combined_patch standard verify_openssl
