@@ -1,0 +1,13 @@
+
+build_package_combined_patch() {
+  local package_name="$1"
+
+  {
+    curl "https://raw.github.com/skaes/rvm-patchsets/raw/master/patches/ruby/2.3/head/railsexpress/01-zero-broken-tests.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/raw/master/patches/ruby/2.3/head/railsexpress/02-improve-gc-stats.patch" | patch -p1
+    curl "https://raw.github.com/skaes/rvm-patchsets/raw/master/patches/ruby/2.3/head/railsexpress/03-display-more-detailed-stack-trace.patch" | patch -p1
+  } >&4 2>&1
+}
+
+install_package "openssl-1.0.2g" "https://www.openssl.org/source/openssl-1.0.2g.tar.gz#b784b1b3907ce39abf4098702dade6365522a253ad1552e267a9a0e89594aa33" mac_openssl --if has_broken_mac_openssl
+install_package "ruby-2.3.1" "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.bz2#4a7c5f52f205203ea0328ca8e1963a7a88cf1f7f0e246f857d595b209eac0a4d" ldflags_dirs combined_patch standard verify_openssl
