@@ -1,0 +1,13 @@
+require_gcc
+
+build_package_remove_tk() {
+  local package_name="$1"
+
+  {
+    echo "Removing tk"
+    rm -fr source/ext/tk
+  } >&4 2>&1
+}
+
+
+install_package "ruby-enterprise-1.8.7-2012.02" "https://rubyenterpriseedition.googlecode.com/files/ruby-enterprise-1.8.7-2012.02.tar.gz#ecf4a6d4c96b547b3bf4b6be14e082ddaa781e83ad7f69437cd3169fb7576e42" warn_eol remove_tk ree_installer
